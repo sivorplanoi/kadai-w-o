@@ -1,0 +1,46 @@
+<h2>＜アカウント編集＞</h2>
+
+<%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
+  <%= devise_error_messages! %>
+
+  <div class="form-group">
+    <%= f.label :setting_name, '名前の変更' %><br />
+    <%= f.text_field :setting_name, autofocus: true %>
+  </div>
+    
+  <div class="form-group">
+    <%= f.label :setting_id, 'IDの変更' %><br />
+    <%= f.text_field :setting_id %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :email, 'メールアドレスの変更' %><br />
+    <%= f.email_field :email %>
+  </div>
+
+  <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
+    <div>Currently waiting confirmation for: <%= resource.unconfirmed_email %></div>
+  <% end %>
+
+  <div class="form-group">
+    <%= f.label :password, 'パスワードの変更' %>（パスワードは<%= @minimum_password_length %>文字以上）<br />
+    <%= f.password_field :password, autocomplete: "off", placeholder: '変更後のパスワード' %><br />
+
+    <%= f.password_field :password_confirmation, autocomplete: "off", placeholder: '変更後のパスワード確認' %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :current_password, '現在のパスワード' %>（<u>変更の保存には現在のパスワードを入力する必要があります</u>）<br />
+    <%= f.password_field :current_password, autocomplete: "off", placeholder: '現在のパスワード' %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit "保存", data: { confirm: "変更の保存には現在のパスワードの入力が必要です。入力したことを確認して「OK」を押してください。" } %>
+  </div>
+<% end %>
+
+<h3>アカウントの削除</h3>
+
+<p><%= button_to "削除", registration_path(resource_name), data: { confirm: "本当に削除しますか？" }, method: :delete %></p>
+
+<%= link_to "戻る", :back %>

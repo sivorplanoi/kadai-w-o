@@ -1,0 +1,24 @@
+<%= form_for(@group) do |f| %>
+  <div class="input-group col-sm-4 col-lg-3">
+    <%= f.text_field :name, class: 'form-control', placeholder: '新規グループ名' %>
+    <span class="input-group-btn">
+      <%= f.submit '新規作成', class: 'btn btn-primary btn-block' %>
+      <%= hidden_field_tag :belonging_groups_counts, @belonging_groups_counts %>
+    </span>
+  </div>
+<% end %>
+<div>
+  <p></p>
+</div>
+
+<div id="main-gallery">
+  
+  <div class="gallery-cell gallery-cell-0"><%= render 'lists/show', groupindex: 0 %></div>
+
+  <% i=0 %>
+  <% current_user.belonging_groups.each do |f| %>
+    <div class="gallery-cell gallery-cell-<%= i+1 %>"><%= render 'lists/groupshow', groupindex: i, group_id: f.id %></div>
+    <% i=i+1 %>
+  <% end %>
+
+</div>

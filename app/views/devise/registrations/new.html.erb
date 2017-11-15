@@ -1,0 +1,45 @@
+
+<div class="account-box col-md-4 col-md-offset-4 col-sm-6 col-sm-offset-3">
+  <h2>アカウント作成</h2>
+  
+  <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+    <%= devise_error_messages! %>
+  
+    <div class="form-group">
+      <%= f.label :setting_name, '名前' %><br />
+      <%= f.text_field :setting_name, autofocus: true, class: 'form-control' %>
+    </div>
+    
+    <div class="form-group" id="registration_form_id">
+      <%= f.label :setting_id, 'ID' %>（グループに入るときに使います）<br />
+      <%= f.text_field :setting_id, class: 'form-control', id: 'registration_form_id_field' %>
+      <% if (@all_user_id != nil) %>
+        <% @all_user_id.each do |i| %>
+          <%= hidden_field_tag :all_user_id_info_name, i.setting_id, class: 'all_user_id_info_class' %>
+        <% end %>
+      <% end %>
+      <div id="alert_already_id"></div>
+    </div>
+
+  
+    <div class="form-group" id="registration_form_email">
+      <%= f.label :email, 'メールアドレス' %><br />
+      <%= f.email_field :email, class: 'form-control' %>
+    </div>
+  
+    <div class="form-group">
+      <%= f.label :password, 'パスワード' %>（<%= @minimum_password_length %>文字以上）<br />
+      <%= f.password_field :password, autocomplete: "off", class: 'form-control' %>
+    </div>
+  
+    <div class="form-group">
+      <%= f.label :password_confirmation, 'パスワード確認' %>（再入力）<br />
+      <%= f.password_field :password_confirmation, autocomplete: "off", class: 'form-control' %>
+    </div>
+  
+    <%= f.submit "登録", class: 'btn btn-primary btn-block' %>
+    
+  <% end %>
+  
+  <%= render "devise/shared/links" %>
+</div>

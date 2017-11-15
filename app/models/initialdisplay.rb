@@ -1,0 +1,2 @@
+class Initialdisplay < ApplicationRecord
+end

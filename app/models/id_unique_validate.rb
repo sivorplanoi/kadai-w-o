@@ -1,0 +1,2 @@
+class IdUniqueValidate < ApplicationRecord
+end

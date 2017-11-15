@@ -1,0 +1,163 @@
+
+<div id="target11">
+
+<div id="list-outline">
+
+
+
+<div id="fixedBox">
+  <nav class="navbar navbar-default">
+    <div class="container-fluid">
+      <div>
+        <h3 class="text-left">＜<%= current_user.belonging_groups.find_by(id: group_id).name %>＞</h3>
+
+          <span class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">メンバー
+              <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+                <% @groupmembers[groupindex].each do |g| %>
+                  <li><a href="#"><%= g.setting_name %></a></li>
+                <% end %>
+            </ul>
+          </span>
+          
+          <%= form_tag("/relationships", method: "post") do %>
+            <div class="input-group col-sm-4 col-lg-3">
+              <%= text_field_tag :add_member_id,'', class: 'form-control', placeholder: '追加メンバーのID' %>
+              <span class="input-group-btn">
+                <%= submit_tag "追加", class: 'btn btn-primary btn-block'  %>
+                <%= hidden_field_tag :current_group, current_user.belonging_groups.find_by(id: group_id).id %>
+              </span>
+            </div>      
+          <% end %>
+          
+      </div>
+      <div class="navbar-header">
+        <!-- 横幅が狭い時に出るハンバーガーボタン -->
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar<%= + (groupindex + 1) %>">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+  
+        <!-- ホームへ戻るリンク。ブランドロゴなどを置く。 -->
+        <a class="navbar-brand" href="#"><%= @active_grouptab[groupindex].name %></a>
+      </div>
+  
+      <!-- メニュー項目 -->
+      <div id="navbar<%= + (groupindex + 1) %>" class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+          <li>
+            <%= form_for(@grouptab[groupindex]) do |f| %>
+              <div class="input-group col-sm-4 col-lg-3">
+                <%= f.text_field :name, class: 'form-control', placeholder: '新規リスト名' %>
+                <span class="input-group-btn">
+                  <%= f.submit '新規作成', class: 'btn btn-primary btn-block' %>
+                  <%= hidden_field_tag :current_group, current_user.belonging_groups.find_by(id: group_id).id %>
+                  <%= hidden_field_tag :createtab_groupindex, groupindex %>
+                </span>
+              </div>
+            <% end %>
+          </li>
+          <% @grouptabs[groupindex].each do |grouptab| %>
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown"><%= grouptab.name %>
+              <span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <% temp = ('active_grouptab_id_' + groupindex.to_s).to_sym %>
+                <li><%= link_to grouptab.name + 'を開く', listspage_path(temp => grouptab.id), data: { no_turbolink: true } %></li>
+                <% if grouptab.group.join_this_group(current_user) && grouptab.name != '初期リスト'  %>
+                  <li><%= link_to grouptab.name + 'を削除する', grouptab, method: :delete, data: { confirm: "You sure?" } %></li>
+                <% end %>
+              </ul>
+            </li>
+          <% end %>
+        </ul>
+      </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+  </nav>
+</div>
+
+
+
+<div id="addinput">
+
+
+
+</div>
+
+
+<div id="cards">
+  <div class="row-eq-height">
+      <div class="col-xs-12 col-sm-6 col-md-4">
+        <div class="form-horizontal" role="form">
+          <div class="panel panel-default">
+
+            <div class="panel-body">
+              <div class="col-sm-10 col-sm-offset-1">
+                <h4><u>分類ラベル追加</u></h4>
+                <%= form_for(@groupclassification[groupindex]) do |f| %>
+                  <div class="input-group">
+                    <%= f.text_field :classification, class: 'form-control' %>
+                    <span class="input-group-btn">
+                      <%= f.submit '追加', class: 'btn btn-primary btn-block' %>
+                      <%= hidden_field_tag :current_group, current_user.belonging_groups.find_by(id: group_id).id %>
+                    </span>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    
+    <% @groupclassifications[groupindex].each do |gc| %>
+      <div class="col-xs-12 col-sm-6 col-md-4 listcontent">
+        <div class="panel panel-warning">
+          <div class="panel-heading">
+            <h3 class="panel-title" style="text-align: center">
+              <%= link_to '', gc, method: :delete, class: 'glyphicon glyphicon-remove-circle'%>
+              <%= gc.classification %>
+              
+              
+              
+              
+              </h3>
+          </div>
+          <div class="panel-body"></div>
+          <ul class="list-group sortable">
+            <% @grouplists[groupindex].where(classification: gc.classification).each do |gl| %>
+              <li class="list-group-item">
+                <%= link_to '', gl, method: :delete, class: 'glyphicon glyphicon-remove-circle'%>
+                <%= gl.content %>
+                
+                
+              
+              </li>
+            <% end %>
+          </ul>
+          
+            <%= form_for(@grouplist[groupindex]) do |f| %>
+              <div class="input-group">
+                <%= f.text_field :content, autofocus: true, class: 'form-control', placeholder: '項目' %>
+
+                <%= hidden_field_tag :classificationEach, gc.classification %>
+                <span class="input-group-btn">
+                  <%= f.submit '追加', class: 'btn btn-primary btn-block' %>
+                  <%= hidden_field_tag :current_group, current_user.belonging_groups.find_by(id: group_id).id %>
+                </span>
+              </div>
+            <% end %>
+
+        </div>
+      </div>  
+    <% end %>
+  </div>
+</div>
+
+</div>
+
+
+</div>
